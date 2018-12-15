@@ -1,0 +1,15 @@
+main: com.cocoapebbles.bed.Main
+name: Bed
+version: 1.0
+api-version: 1.13
+author: Scott
+description: Quick bed utility
+commands:
+  bed:
+    description: Summons a bed
+    usage: "Usage: '/bed' to summon bed"
+    permission: bed
+permissions:
+  bed:
+    description: Allows bed command
+    default: true
