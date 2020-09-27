@@ -39,7 +39,7 @@
   <groupId>com.elliemae.cpe</groupId>
   <artifactId>cocoapebbles-bed</artifactId>
   <packaging>jar</packaging>
-  <version>1.0</version>
+  <version>1.1</version>
   <name>bed-plugin</name>
   <url>http://maven.apache.org</url>
     <properties>
@@ -61,7 +61,7 @@
       <dependency>
           <groupId>org.spigotmc</groupId>
           <artifactId>spigot-api</artifactId>
-          <version>1.13-R0.1-SNAPSHOT</version>
+          <version>1.16.3-R0.1-SNAPSHOT</version>
           <scope>provided</scope>
       </dependency>
   </dependencies>

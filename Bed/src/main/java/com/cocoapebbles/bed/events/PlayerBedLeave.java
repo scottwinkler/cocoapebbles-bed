@@ -2,10 +2,8 @@ package com.cocoapebbles.bed.events;
 
 
 import com.cocoapebbles.bed.Main;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import com.cocoapebbles.bed.utils.PlayerBedLocationManager;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.Bed;
@@ -14,39 +12,18 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 
+import java.util.ArrayList;
+
 public class PlayerBedLeave implements Listener {
-    private Main plugin;
+    private Main m;
+    private ArrayList<String> quotes;
     private ChatColor chatColor = ChatColor.GOLD;
-    private String[] msgs = {
-            "An army that marches under the true cross cannot be beaten!",
-            "Deus Vult!",
-            "Insta-bed is a service brought to you by Southern prosperity",
-            "Buy LightSpeed briefs",
-            "Never trust a Northern lord",
-            "Long live the King",
-            "Today would be a good day for a crusade",
-            "It is good to be the King",
-            "Food please",
-            "Stone please",
-            "Wood Please",
-            "Gold please",
-            "/cheese steak jimmy's",
-            "I just wanted to be loved",
-            "Wenk Wenk",
-            "Who wants to play video games?",
-            "A lemon gives by taking",
-            "I am alone and you made me like this",
-            "Lemon need not squeeze lemon to survive",
-            "For the emperor!",
-            "The voices in my head are telling me to do horrible things!",
-            "Who are you again?",
-            "Thankfully, children are easy to kill",
-            "May you be sewn into the belly of a dead camel!"
-    };
+
     public String getRandomMessage(){
-        int randomNum = (int) (Math.random()*msgs.length);
-        return msgs[randomNum];
+        int randomNum = (int) (Math.random()*quotes.size());
+        return quotes.get(randomNum);
     }
+
     public void destroyBed(Block block){
         Bed bed = (Bed) block.getBlockData();
         BlockFace blockFace = bed.getFacing();
@@ -66,9 +43,9 @@ public class PlayerBedLeave implements Listener {
         }
         block.setType(Material.AIR);
     }
+
     @EventHandler
     public void onPlayerBedLeave(PlayerBedLeaveEvent event){
-
         Block block = event.getBed();
         Player player = (Player) event.getPlayer();
 
@@ -76,9 +53,10 @@ public class PlayerBedLeave implements Listener {
             player.sendMessage(chatColor + getRandomMessage());
             destroyBed(block);
         }
-
     }
-    public PlayerBedLeave(Main plugin){
-        this.plugin = plugin;
+
+    public PlayerBedLeave(Main plugin, ArrayList<String> quotes){
+        this.m= plugin;
+        this.quotes = quotes;
     }
 }

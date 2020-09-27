@@ -1,7 +1,10 @@
 package com.cocoapebbles.bed.commands;
 
+import com.cocoapebbles.bed.Main;
+import com.cocoapebbles.bed.utils.PlayerBedLocationManager;
 import net.md_5.bungee.api.ChatColor;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -21,8 +24,10 @@ import java.util.logging.Logger;
 public class SummonBed implements CommandExecutor {
     private ChatColor chatColor = ChatColor.GOLD;
     private Logger logger;
+    private Main m;
     public SummonBed(JavaPlugin p){
         this.logger = p.getLogger();
+        this.m = (Main) p;
     }
     public void MakeBed(Player player){
         //get location and world to make bed at
@@ -56,24 +61,30 @@ public class SummonBed implements CommandExecutor {
             blockFace=BlockFace.NORTH;
         }
         else {
-            player.sendMessage(chatColor + "You do not have room to create a bed!");
+            player.sendMessage(ChatColor.RED + "[BED] You do not have room to create a bed!");
             return;
         }
+
         TeleportUp(player,1);
 
         // Make Head of Bed
         Location location2 = new Location(world,X2,Y,Z2);
-        MakeBed(Bed.Part.HEAD, blockFace, location2);
+        MakeBedPart(Bed.Part.HEAD, blockFace, location2);
 
         // Make Foot of Bed
         Location location1 = new Location(world,X,Y,Z);
-        MakeBed(Bed.Part.FOOT, blockFace, location1);
+        MakeBedPart(Bed.Part.FOOT, blockFace, location1);
 
         //success
-        player.sendMessage(chatColor + "Bed created!");
+        sendPlayerMessage(player,location2);
     }
 
-    public void MakeBed(Bed.Part part, BlockFace blockFace, Location location){
+    private void sendPlayerMessage(Player player,Location location){
+        String name = player.getUniqueId().toString();
+        player.sendMessage(chatColor + "[BED] Bed created!");
+    }
+
+    public void MakeBedPart(Bed.Part part, BlockFace blockFace, Location location){
         World world = location.getWorld();
         Block block = world.getBlockAt(location);
         BlockState state = block.getState();
@@ -101,19 +112,21 @@ public class SummonBed implements CommandExecutor {
         getHelpfulTimeMessage(player);
         return false;
     }
+
     public void getHelpfulTimeMessage(Player player){
         World world = player.getWorld();
         long time = world.getTime();
-        String text = "**The time is: " + time;
-        player.sendMessage(chatColor + "**Sorry, you cannot create a bed now");
-        player.sendMessage(chatColor + text);
-        player.sendMessage(chatColor + "**Try again after 12517");
+
+        player.sendMessage(ChatColor.RED + "[BED] Sorry, you cannot create a bed now");
+        player.sendMessage(ChatColor.RED +"[BED] The time is: " + time);
+        player.sendMessage(ChatColor.RED  + "[BED] Try again after 12517");
     }
+
     public Boolean hasHeadRoom(Player player){
         World world = player.getWorld();
         Location location = player.getLocation();
         if (world.getBlockAt(location.add(0,1,0)).getType()!=Material.AIR){
-            player.sendMessage(chatColor + "Not enough head room!");
+            player.sendMessage(ChatColor.RED + "[BED] Not enough head room!");
             return false;
         }
         return true;
@@ -123,7 +136,7 @@ public class SummonBed implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel,
                              String[] args) {
         if(!(sender instanceof Player)){
-            sender.sendMessage("You must be a player to use this command!");
+            sender.sendMessage("[Bed] You must be a player to use this command!");
             return false;
         }
         Player player = (Player) sender;
